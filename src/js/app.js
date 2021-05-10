@@ -12,6 +12,7 @@ const contenedorCitas = document.querySelector('#citas');
 //instanciamos las clases
 const cita = new Citas();
 const ui = new UI();
+let editando;
 
 //objeto mascota
 const citaObj = {
@@ -38,17 +39,39 @@ function nuevacita(e){
         return;
     }
 
-    //generar un id único
-    citaObj.id = Date.now();
+    if(editando){ 
 
-    //creamos nueva cita
-    cita.agregarCita(citaObj);
+        //pasar el objeto de citas
+        cita.editarCita(citaObj);
+
+        //mensaje de actualizado correctamente
+        ui.imprimirAlerta('Cita Actualizada Satisfactoriamente');
+
+        //cambiar texto del boton
+        formulario.querySelector('button[type="submit"]').textContent = 'Crear Cita';
+
+        //quitar modo edición
+        editando = false;
+
+    }else{
+        //generar un id único
+        citaObj.id = Date.now();
+
+        //creamos nueva cita
+        cita.agregarCita(citaObj);
+
+        //mensaje de agregado correctamente
+        ui.imprimirAlerta('Cita Creada Satisfactoriamente');
+    }
 
     //reiniciamos el formulario
     formulario.reset();
 
     //reiniciar obj
     reiniciarObj();
+
+    //Mostrar citas en html
+    ui.imprimirCitas(cita, contenedorCitas);
 }
 
 function reiniciarObj(){
@@ -57,6 +80,44 @@ function reiniciarObj(){
     }
 }
 
+export function eliminarCita(id){
+
+    //Eliminar cita
+    cita.eliminarCita(id);
+
+    //muestre un mensaje
+    ui.imprimirAlerta('Cita Eliminada Satisfactoriamente', 'exito');
+
+    //refrescar cita
+    ui.imprimirCitas(cita, contenedorCitas);
+}
+
+//editar cita
+export function cargarEdicion(date){
+    const { mascota: mascotaInput, propietario: propietarioInput, telefono: telefonoInput, fecha: fechaInput, hora: horaInput, sintomas: sintomasInput, id } = date;
+
+    //llenar los inputs
+    mascota.value = mascotaInput;
+    propietario.value = propietarioInput;
+    telefono.value = telefonoInput;
+    fecha.value = fechaInput;
+    hora.value = horaInput;
+    sintomas.value = sintomasInput;
+
+    //llenar el objeto
+    citaObj.mascota = mascotaInput;
+    citaObj.propietario = propietarioInput;
+    citaObj.telefono = telefonoInput;
+    citaObj.fecha = fechaInput;
+    citaObj.hora = horaInput;
+    citaObj.sintomas = sintomasInput;
+    citaObj.id = id;
+
+    //cambiar texto del boton
+    formulario.querySelector('button[type="submit"]').textContent = 'Guardar Cambios';
+
+    editando = true;
+}
 
 //eventos
 function enventListeners(){
