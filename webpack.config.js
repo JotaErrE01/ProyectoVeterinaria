@@ -4,7 +4,7 @@ const TerserPlugin = require('terser-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 
 module.exports = {
-    mode: "development",
+    mode: "production",
     entry: './src/js/app.js',
     output: {
         filename: 'app.bundle.js',
